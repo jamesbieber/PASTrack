@@ -1,16 +1,6 @@
-const knex = require('knex')
 const router = require('express').Router();
 
-const knexConfig = {
-    client: 'sqlite3',
-    connection: {
-        filename: './data/dev.db'
-    },
-    useNullAsDefault: true
-}
-
 const dbUsers = require('../models/userModel.js')
-const db = knex(knexConfig);
 
 router.post('/register', async (req, res) => {
     const user = req.body;
@@ -47,6 +37,17 @@ router.get('/:id', async (req, res) => {
         res.status(500).json(error);
     }
 })
+
+router.get('/:id/tests', async (req, res) => {
+    try {
+        const id = req.params.id;
+        const user = await dbUsers.getById(id)
+        const tests = await dbUsers.getTests(id);
+        res.status(200).json({user: user.name, tests});
+    } catch (error) {
+        res.status(500).json(error);
+    }
+});
 
 router.put('/:id', async (req, res) => {
     try {

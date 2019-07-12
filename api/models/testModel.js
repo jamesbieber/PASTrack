@@ -1,4 +1,6 @@
-const db = knex("./dbConfig")
+const knex = require('knex')
+const knexFile = require('../../knexfile')
+const db = knex(knexFile.development)
 
 module.exports = {
     getTests,
@@ -9,19 +11,19 @@ module.exports = {
   };
   
 function getTests() {
-return db("tests");
+    return db("tests");
 }
 
 function getById(id) {
-return db("tests").where({ id }).first();
+    return db("tests").where({ id }).first();
 }
   
 function insert(test) {
-return db("tests")
-    .insert(test)
-    .then(ids => {
-    return getById(ids[0]);
-    });
+    return db("tests")
+        .insert(test)
+        .then(ids => {
+            return getById(ids[0]);
+        });
 }
 
 function update(id, changes) {
